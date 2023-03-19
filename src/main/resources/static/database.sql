@@ -1,3 +1,7 @@
+create database if not exists cangzhu;
+-- create database
+use cangzhu;
+
 create table if not exists p_user
 (
     email  char(64)      not null,

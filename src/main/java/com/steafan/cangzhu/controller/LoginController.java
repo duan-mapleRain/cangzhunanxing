@@ -5,6 +5,7 @@ import com.steafan.cangzhu.controller.request.user.TokenDTO;
 import com.steafan.cangzhu.controller.response.BaseResponse;
 import com.steafan.cangzhu.mapper.UserMapper;
 import com.steafan.cangzhu.service.LoginService;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,6 +22,7 @@ import javax.validation.Valid;
 public class LoginController {
     private final LoginService loginService;
 
+    @ApiResponse
     @PostMapping("/in")
     public BaseResponse<String> register(@Valid @RequestBody RegisterDTO registerDTO) {
         return loginService.in(registerDTO);
