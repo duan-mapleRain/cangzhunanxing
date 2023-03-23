@@ -12,6 +12,11 @@ spring:
     port: 6379
     password: cangzhutest
 
+netty:
+  server:
+    host: localhost
+    port: 1972
+
 
 
 springdoc:

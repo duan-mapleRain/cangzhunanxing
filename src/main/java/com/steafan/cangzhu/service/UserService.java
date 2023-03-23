@@ -7,6 +7,7 @@ import com.steafan.cangzhu.controller.request.user.UpdatePasswdDTO;
 import com.steafan.cangzhu.controller.response.BaseResponse;
 import com.steafan.cangzhu.controller.response.ResponseCode;
 import com.steafan.cangzhu.mapper.UserMapper;
+import com.steafan.cangzhu.repository.RedisCache;
 import com.steafan.cangzhu.repository.entity.User;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -29,6 +30,8 @@ import static org.springframework.util.DigestUtils.md5DigestAsHex;
 public class UserService {
     @Resource
     private UserMapper userMapper;
+
+    private final RedisCache redisCache;
 
     //
     public BaseResponse<Integer> register(RegisterDTO registerDTO) {

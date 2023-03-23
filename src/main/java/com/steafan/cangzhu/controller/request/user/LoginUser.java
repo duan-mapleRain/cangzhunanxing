@@ -1,4 +1,4 @@
-package com.steafan.cangzhu.service;
+package com.steafan.cangzhu.controller.request.user;
 
 import com.steafan.cangzhu.repository.entity.User;
 import lombok.AllArgsConstructor;
