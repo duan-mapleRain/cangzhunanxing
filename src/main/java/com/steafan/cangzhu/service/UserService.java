@@ -5,7 +5,7 @@ import com.steafan.cangzhu.controller.request.user.RegisterDTO;
 import com.steafan.cangzhu.controller.request.user.UpdateInfoDTO;
 import com.steafan.cangzhu.controller.request.user.UpdatePasswdDTO;
 import com.steafan.cangzhu.controller.response.BaseResponse;
-import com.steafan.cangzhu.controller.response.ResponseCode;
+import com.steafan.cangzhu.enums.ResponseCode;
 import com.steafan.cangzhu.mapper.UserMapper;
 import com.steafan.cangzhu.repository.RedisCache;
 import com.steafan.cangzhu.repository.entity.User;
@@ -13,10 +13,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.util.DigestUtils;
 
 import javax.annotation.Resource;
-import java.util.Arrays;
 
 import static org.springframework.util.DigestUtils.md5DigestAsHex;
 

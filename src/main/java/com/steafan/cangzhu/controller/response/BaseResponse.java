@@ -1,6 +1,7 @@
 package com.steafan.cangzhu.controller.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.steafan.cangzhu.enums.ResponseCode;
 
 import java.io.Serializable;
 

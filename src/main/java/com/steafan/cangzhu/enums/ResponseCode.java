@@ -1,4 +1,4 @@
-package com.steafan.cangzhu.controller.response;
+package com.steafan.cangzhu.enums;
 
 public record ResponseCode() {
 

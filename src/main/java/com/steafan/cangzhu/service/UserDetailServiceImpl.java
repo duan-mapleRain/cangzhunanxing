@@ -1,7 +1,7 @@
 package com.steafan.cangzhu.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.steafan.cangzhu.controller.request.user.LoginUser;
+import com.steafan.cangzhu.controller.request.user.TokenDTO;
 import com.steafan.cangzhu.mapper.UserMapper;
 import com.steafan.cangzhu.repository.entity.User;
 import lombok.RequiredArgsConstructor;
@@ -35,6 +35,6 @@ public class UserDetailServiceImpl implements UserDetailsService {
             authorities.add(Integer.toString(i));
         }
         //数据封装成UserDetails返回
-        return new LoginUser(user, authorities);
+        return new TokenDTO(user, authorities);
     }
 }

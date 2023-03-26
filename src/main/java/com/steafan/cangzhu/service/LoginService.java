@@ -5,11 +5,10 @@ import cn.hutool.core.date.DateTime;
 import cn.hutool.jwt.JWTPayload;
 import cn.hutool.jwt.JWTUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.steafan.cangzhu.controller.request.user.LoginUser;
 import com.steafan.cangzhu.controller.request.user.RegisterDTO;
 import com.steafan.cangzhu.controller.request.user.TokenDTO;
 import com.steafan.cangzhu.controller.response.BaseResponse;
-import com.steafan.cangzhu.controller.response.ResponseCode;
+import com.steafan.cangzhu.enums.ResponseCode;
 import com.steafan.cangzhu.mapper.UserMapper;
 import com.steafan.cangzhu.repository.entity.User;
 import lombok.RequiredArgsConstructor;
@@ -58,7 +57,7 @@ public class LoginService {
 
         }
 
-        LoginUser principal = (LoginUser) authenticate.getPrincipal();
+        TokenDTO principal = (TokenDTO) authenticate.getPrincipal();
         String userId = String.valueOf(principal.getUser().getEmail());
         String token = RandomStringUtils.random(16, true, true);
         DateTime now = DateTime.now();

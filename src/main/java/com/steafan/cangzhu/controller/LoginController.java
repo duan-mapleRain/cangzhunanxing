@@ -3,7 +3,6 @@ package com.steafan.cangzhu.controller;
 import com.steafan.cangzhu.controller.request.user.RegisterDTO;
 import com.steafan.cangzhu.controller.request.user.TokenDTO;
 import com.steafan.cangzhu.controller.response.BaseResponse;
-import com.steafan.cangzhu.mapper.UserMapper;
 import com.steafan.cangzhu.service.LoginService;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
