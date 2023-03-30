@@ -7,20 +7,19 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.experimental.Accessors;
 
 @Data
-@Accessors(chain = true)
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@TableName("p_user")
-public class User {
-
+@TableName("p_device_model")
+public class DeviceModelDAO {
     @TableId(type = IdType.AUTO)
     private Integer id;
-    private String email;
-    private String password;
-    private Integer status = 0;
+    private String name;
+    private String info;
+    private String rule;
+    private String register_time;
+    private String update_time;
 
 }

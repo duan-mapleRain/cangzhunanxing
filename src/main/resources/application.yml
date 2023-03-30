@@ -1,35 +1,3 @@
-server:
-  port: 612
-
 spring:
-  datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/cangzhu
-    username: root
-    password: cangzhutest
-  redis:
-    host: localhost
-    port: 6379
-    password: cangzhutest
-
-netty:
-  server:
-    host: localhost
-    port: 1972
-
-
-
-springdoc:
-  swagger-ui:
-    # 开启Swagger UI界面
-    enabled: true
-  api-docs:
-    # 开启api-docs
-    enabled: true
-  # 配置需要生成接口文档的扫描包
-  packages-to-scan: com.steafan.cangzhu
-
-
-mybatis-plus:
-  configuration:
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  profiles:
+    active: remote

@@ -1,26 +1,38 @@
 package com.steafan.cangzhu.service;
 
+import cn.hutool.core.date.DateField;
+import cn.hutool.core.date.DateTime;
+import cn.hutool.jwt.JWTPayload;
+import cn.hutool.jwt.JWTUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.steafan.cangzhu.controller.request.TokenDTO;
 import com.steafan.cangzhu.controller.request.user.RegisterDTO;
 import com.steafan.cangzhu.controller.request.user.UpdateInfoDTO;
 import com.steafan.cangzhu.controller.request.user.UpdatePasswdDTO;
-import com.steafan.cangzhu.controller.response.BaseResponse;
-import com.steafan.cangzhu.enums.ResponseCode;
+import com.steafan.cangzhu.controller.response.CZResultException;
+import com.steafan.cangzhu.controller.response.TokenResponse;
+import com.steafan.cangzhu.enums.HttpStatus;
 import com.steafan.cangzhu.mapper.UserMapper;
 import com.steafan.cangzhu.repository.RedisCache;
-import com.steafan.cangzhu.repository.entity.User;
+import com.steafan.cangzhu.repository.entity.UserDAO;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.RandomStringUtils;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
-import static org.springframework.util.DigestUtils.md5DigestAsHex;
 
-/**
- * @author AnselYuki
- */
 @Setter
 @Slf4j
 @Service
@@ -31,31 +43,112 @@ public class UserService {
 
     private final RedisCache redisCache;
 
+    @Resource
+    private final BCryptPasswordEncoder passwordEncoder;
+
+    @Resource
+    private final AuthenticationManager authenticationManager;
+
+
+    private static final String REDIS_KEY_PREFIX_LOGIN = "LOGIN:";
+    @Value("${cz-copilot.jwt.secret}")
+    private String secret;
+    @Value("${cz-copilot.jwt.expire}")
+    private int expire;
+
+
     //
-    public BaseResponse<Integer> register(RegisterDTO registerDTO) {
-        QueryWrapper<User> queryWrapper = new QueryWrapper<User>();
+    public int register(RegisterDTO registerDTO) {
+
+        String encode = passwordEncoder.encode(registerDTO.getPassword());
+
+        QueryWrapper<UserDAO> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("username", registerDTO.getUsername());
         queryWrapper.eq("email", registerDTO.getEmail());
         if (userMapper.exists(queryWrapper)) {
-            return BaseResponse.success(ResponseCode.REGISTER_FAIL);
+            throw new CZResultException(HttpStatus.USER_EXIST);
         }
-        User user = new User();
-        //todo 加盐
-        String encode = md5DigestAsHex((registerDTO.getPassword().getBytes()));
-        user.setEmail(registerDTO.getEmail());
-        user.setPassword(encode);
-        user.setStatus(0);
-        if (userMapper.insert(user) == 0) {
-            return BaseResponse.success(ResponseCode.REGISTER_FAIL);
+        UserDAO userDAO = new UserDAO();
+        userDAO.setUsername(registerDTO.getUsername());
+        userDAO.setEmail(registerDTO.getEmail());
+        userDAO.setPassword(encode);
+        userDAO.setStatus(0);
+        if (userMapper.insert(userDAO) == 0) {
+            throw new CZResultException(HttpStatus.USER_EXIST);
         }
-        return BaseResponse.success(ResponseCode.REGISTER_SUCCESS);
+        return userDAO.getId();
     }
 
 
-    public BaseResponse<Void> update_passwd(UpdatePasswdDTO updatePasswdDTO) {
-        return BaseResponse.success(ResponseCode.UPDATE_PASSWORD_SUCCESS);
+    public void update_passwd(TokenDTO tokenDTO, UpdatePasswdDTO updatePasswdDTO) {
+        String username = tokenDTO.getUserDAO().getUsername();
+        QueryWrapper<UserDAO> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("username", username);
+        UserDAO userDAO = userMapper.selectOne(queryWrapper);
+        if (!passwordEncoder.matches(updatePasswdDTO.getOldPassword(), userDAO.getPassword())) {
+            throw new CZResultException(HttpStatus.USER_OLD_PASSWORD_ERROR);
+        }
+        userDAO.setPassword(passwordEncoder.encode(updatePasswdDTO.getNewPassword()));
+        if (userMapper.updateById(userDAO) < 1) {
+            throw new CZResultException(HttpStatus.DEVICE_INFO_UPDATE_FAILED);
+        }
     }
 
-    public BaseResponse<Void> update_user_info(UpdateInfoDTO updateInfoDTO) {
-        return BaseResponse.success(ResponseCode.UPDATE_INFO_SUCCESS);
+    public void update_user_info(TokenDTO tokenDTO, UpdateInfoDTO updateInfoDTO) {
     }
+
+    public TokenResponse in(RegisterDTO registerDTO) {
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(registerDTO.getUsername(), registerDTO.getPassword());
+        Authentication authenticate = authenticationManager.authenticate(authenticationToken);
+
+        // 若认证失败，给出相应提示
+        if (Objects.isNull(authenticate)) {
+            throw new CZResultException(HttpStatus.USER_LOGIN_FAIL);
+        }
+
+        TokenDTO tokenDTO = (TokenDTO) authenticate.getPrincipal();
+        String userId = String.valueOf(tokenDTO.getUserDAO().getUsername());
+        String token = RandomStringUtils.random(16, true, true);
+        DateTime now = DateTime.now();
+        DateTime newTime = now.offsetNew(DateField.SECOND, expire);
+        // 签发JwtToken，从上到下为设置签发时间，过期时间与生效时间
+        Map<String, Object> payload = new HashMap<>(4) {
+            {
+                put(JWTPayload.ISSUED_AT, now.getTime());
+                put(JWTPayload.EXPIRES_AT, newTime.getTime());
+                put(JWTPayload.NOT_BEFORE, now.getTime());
+                put("userId", userId);
+                put("token", token);
+            }
+        };
+
+        String cacheKey = REDIS_KEY_PREFIX_LOGIN + userId;
+        redisCache.updateCache(cacheKey, TokenDTO.class, tokenDTO, cacheUser -> {
+            String cacheToken = cacheUser.getToken();
+            if (cacheToken != null && !"".equals(cacheToken)) {
+                payload.put("token", cacheToken);
+            } else {
+                cacheUser.setToken(token);
+            }
+            return cacheUser;
+        }, expire);
+        String jwt = JWTUtil.createToken(payload, secret.getBytes());
+
+
+        TokenResponse rsp = new TokenResponse();
+        rsp.setToken(jwt);
+        rsp.setValidAfter(LocalDateTime.now().toString());
+        rsp.setValidBefore(newTime.toLocalDateTime().toString());
+        rsp.setRefreshToken("");
+        rsp.setRefreshTokenValidBefore("");
+        rsp.setUserInfo(tokenDTO.converter());
+
+        return rsp;
+    }
+
+
+    public void update(TokenDTO tokenDTO) {
+        //todo 判断redis中是否存在，如果存在则更新过期时间
+    }
+
 }

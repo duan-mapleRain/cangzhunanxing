@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 
@@ -18,6 +19,7 @@ import java.util.function.Supplier;
 @RequiredArgsConstructor
 public class RedisCache {
 
+    @Value("${cz-copilot.cache.default-expire}")
     private int expire = 10;
 
     private final StringRedisTemplate redisTemplate;

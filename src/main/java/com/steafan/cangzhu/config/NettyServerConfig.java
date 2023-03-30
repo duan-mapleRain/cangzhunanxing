@@ -51,9 +51,9 @@ public class NettyServerConfig {
         ChannelFuture channelFuture = serverBootstrap().bind(address);
         channelFuture.addListener((ChannelFutureListener) future -> {
             if (future.isSuccess()) {
-                System.out.println("111");
+                System.out.println("netty start is success");
             } else {
-                System.out.println("222");
+                System.out.println("netty start is fail");
             }
         });
         return channelFuture.channel();
