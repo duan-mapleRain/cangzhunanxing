@@ -1,7 +1,8 @@
+name:
+  produce
+
 server:
   port: 8080
-
-
 
 spring:
   datasource:
@@ -10,7 +11,7 @@ spring:
     username: root
     password: cangzhutest
   redis:
-    host: {$server_ip}
+    host: { $server_ip }
     port: 6379
     password: cangzhutest
   mvc:
@@ -27,6 +28,3 @@ netty:
 mybatis-plus:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
-
-
-server_ip:

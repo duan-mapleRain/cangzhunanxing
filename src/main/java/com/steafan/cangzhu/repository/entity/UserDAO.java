@@ -20,7 +20,7 @@ public class UserDAO {
     @TableId(type = IdType.AUTO)
     private Integer id;
     private String username;
-    private String email;
+    private String account;
     private String password;
     /**
      * -1 已删除

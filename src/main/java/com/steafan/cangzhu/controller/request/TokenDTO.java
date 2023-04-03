@@ -55,7 +55,7 @@ public class TokenDTO implements UserDetails {
 
     @Override
     public String getUsername() {
-        return userDAO.getUsername();
+        return userDAO.getAccount();
     }
 
     @Override
@@ -79,6 +79,6 @@ public class TokenDTO implements UserDetails {
     }
 
     public UserInfoResponse converter() {
-        return new UserInfoResponse(userDAO.getId(), userDAO.getEmail(), userDAO.getStatus());
+        return new UserInfoResponse(userDAO.getId(), userDAO.getAccount(), userDAO.getStatus());
     }
 }

@@ -24,7 +24,7 @@ public class UserDetailServiceImpl implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         QueryWrapper<UserDAO> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("username",username);
+        queryWrapper.eq("account",username);
         UserDAO userDAO = userMapper.selectOne(queryWrapper);
         if (userDAO == null) {
             throw new UsernameNotFoundException("用户不存在");

@@ -6,7 +6,8 @@ import cn.hutool.jwt.JWTPayload;
 import cn.hutool.jwt.JWTUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.steafan.cangzhu.controller.request.TokenDTO;
-import com.steafan.cangzhu.controller.request.user.RegisterDTO;
+import com.steafan.cangzhu.controller.request.user.AddUserDTO;
+import com.steafan.cangzhu.controller.request.user.LoginDTO;
 import com.steafan.cangzhu.controller.request.user.UpdateInfoDTO;
 import com.steafan.cangzhu.controller.request.user.UpdatePasswdDTO;
 import com.steafan.cangzhu.controller.response.CZResultException;
@@ -58,21 +59,21 @@ public class UserService {
 
 
     //
-    public int register(RegisterDTO registerDTO) {
+    public int add(AddUserDTO registerDTO) {
 
         String encode = passwordEncoder.encode(registerDTO.getPassword());
 
         QueryWrapper<UserDAO> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("username", registerDTO.getUsername());
-        queryWrapper.eq("email", registerDTO.getEmail());
+        queryWrapper.eq("account", registerDTO.getAccount());
         if (userMapper.exists(queryWrapper)) {
             throw new CZResultException(HttpStatus.USER_EXIST);
         }
         UserDAO userDAO = new UserDAO();
         userDAO.setUsername(registerDTO.getUsername());
-        userDAO.setEmail(registerDTO.getEmail());
+        userDAO.setAccount(registerDTO.getAccount());
         userDAO.setPassword(encode);
-        userDAO.setStatus(0);
+        userDAO.setStatus(1);
         if (userMapper.insert(userDAO) == 0) {
             throw new CZResultException(HttpStatus.USER_EXIST);
         }
@@ -81,9 +82,9 @@ public class UserService {
 
 
     public void update_passwd(TokenDTO tokenDTO, UpdatePasswdDTO updatePasswdDTO) {
-        String username = tokenDTO.getUserDAO().getUsername();
+        String account = tokenDTO.getUserDAO().getAccount();
         QueryWrapper<UserDAO> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("username", username);
+        queryWrapper.eq("account", account);
         UserDAO userDAO = userMapper.selectOne(queryWrapper);
         if (!passwordEncoder.matches(updatePasswdDTO.getOldPassword(), userDAO.getPassword())) {
             throw new CZResultException(HttpStatus.USER_OLD_PASSWORD_ERROR);
@@ -97,8 +98,8 @@ public class UserService {
     public void update_user_info(TokenDTO tokenDTO, UpdateInfoDTO updateInfoDTO) {
     }
 
-    public TokenResponse in(RegisterDTO registerDTO) {
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(registerDTO.getUsername(), registerDTO.getPassword());
+    public TokenResponse login(LoginDTO loginDTO) {
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(loginDTO.getAccount(), loginDTO.getPassword());
         Authentication authenticate = authenticationManager.authenticate(authenticationToken);
 
         // 若认证失败，给出相应提示
@@ -107,7 +108,7 @@ public class UserService {
         }
 
         TokenDTO tokenDTO = (TokenDTO) authenticate.getPrincipal();
-        String userId = String.valueOf(tokenDTO.getUserDAO().getUsername());
+        String userId = String.valueOf(tokenDTO.getUserDAO().getAccount());
         String token = RandomStringUtils.random(16, true, true);
         DateTime now = DateTime.now();
         DateTime newTime = now.offsetNew(DateField.SECOND, expire);

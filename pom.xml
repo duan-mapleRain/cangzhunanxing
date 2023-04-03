@@ -15,7 +15,7 @@
     <description>cangzhu</description>
 
     <properties>
-        <java.version>11</java.version>
+        <java.version>17</java.version>
     </properties>
 
     <dependencies>
@@ -48,8 +48,6 @@
         </dependency>
 
 
-
-
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
@@ -62,7 +60,6 @@
         </dependency>
 
 
-
         <dependency>
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-boot-starter</artifactId>
@@ -72,7 +69,7 @@
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
-            <version>8.0.28</version>
+            <version>8.0.13</version>
         </dependency>
         <!--redis-->
         <dependency>
@@ -113,18 +110,58 @@
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.1</version>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <!-- 复制第三方 jar 到项目目录下的 target/lib/ 下 -->
+                    <execution>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/lib</outputDirectory>
+                            <excludeScope>provided</excludeScope>
+                            <!-- 配置的作用：跳过复制第三方依赖这一步。这是在首次上传
+                                  第三方依赖到服务器之后，启用这个选项，可以不用在打包时
+                                  重复复制，节省时间。-->
+                            <skip>true</skip>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
                 <configuration>
-                    <source>16</source>
-                    <target>16</target>
-                    <encoding>UTF-8</encoding>
+                    <archive>
+                        <manifest>
+                            <!-- 指定 Spring Boot 启动类，实际测试中必须 -->
+                            <mainClass>com.steafan.cangzhu.CangzhuApplication</mainClass>
+                            <!-- 将所有第三方 jar 添加到项目 jar 的 MANIFEST.MF 文件中，这样运行 jar 时依赖包才能
+                                   被加载 。此为关键步骤，有了这一步，我们在把第三方依赖包与项目包分离的情况
+                                   下，在服务器运行，就和没有分离时， 是一摸一样的了。-->
+                            <addClasspath>true</addClasspath>
+                            <!-- 指定第三方 jar 的目标目录为 ./lib/-->
+                            <classpathPrefix>./lib/</classpathPrefix>
+                        </manifest>
+                    </archive>
                 </configuration>
             </plugin>
+
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <includes>
+                        <include>
+                            <groupId>nothing</groupId>
+                            <artifactId>nothing</artifactId>
+                        </include>
+                    </includes>
+                </configuration>
             </plugin>
+
+
         </plugins>
     </build>
 

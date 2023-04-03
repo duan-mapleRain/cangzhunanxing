@@ -127,7 +127,7 @@ public class ExceptionController {
                                                 HttpServletRequest request) {
         logError(request);
         log.error("Exception: ", e);
-        return BaseResponse.fail(500, "服务器内部错误", null);
+        return BaseResponse.fail(500, "请求参数有误", null);
     }
 
     private void logWarn(HttpServletRequest request) {

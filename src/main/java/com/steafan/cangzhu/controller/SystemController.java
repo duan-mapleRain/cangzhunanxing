@@ -1,11 +1,10 @@
 package com.steafan.cangzhu.controller;
 
 
-import com.steafan.cangzhu.controller.request.user.RegisterDTO;
+import com.steafan.cangzhu.controller.request.user.LoginDTO;
 import com.steafan.cangzhu.controller.response.BaseResponse;
 import com.steafan.cangzhu.controller.response.TokenResponse;
 import com.steafan.cangzhu.service.UserService;
-import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -30,7 +29,7 @@ public class SystemController {
     }
 
     @PostMapping("/login")
-    public BaseResponse<TokenResponse> in(@Valid @RequestBody RegisterDTO registerDTO) {
-        return BaseResponse.success("登录成功", userService.in(registerDTO));
+    public BaseResponse<TokenResponse> login(@Valid @RequestBody LoginDTO loginDTO) {
+        return BaseResponse.success("登录成功", userService.login(loginDTO));
     }
 }

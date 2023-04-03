@@ -16,7 +16,7 @@ import javax.validation.constraints.Email;
 @NoArgsConstructor
 @AllArgsConstructor
 public class LoginDTO {
-    private String username;
+    private String account;
     @Length(min = 6, max = 16, message = "密码长度必须在6-16位之间")
     private String password;
 

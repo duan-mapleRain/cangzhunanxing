@@ -1,17 +1,33 @@
 POST http://localhost:8080/login
 Content-Type: application/json
 
-//{
-//  "username": "root",
-//  "password": "djm19950818"
-//}
-
 {
-  "username": "djm",
-  "password": "adjm19950818"
+  "account": "djm",
+  "password": "djm19950818"
 }
 
+> {%
+    client.global.set("token", "Bearer " + response.body.data.token);
+%}
+
+###增加用户##########
+POST http://localhost:8080/user/add/user
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+  "account": "lxq",
+  "password": "whyssdydjsw555",
+  "username": "titania"
+}
 
 #############
-GET http://localhost:8080/
+POST http://localhost:8080/user/update/passwd
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+  "oldPassword": "123456",
+  "newPassword": "djm19950818"
+}
 

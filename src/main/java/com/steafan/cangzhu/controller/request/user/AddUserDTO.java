@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import org.hibernate.validator.constraints.Length;
 
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -16,13 +15,11 @@ import javax.validation.constraints.NotNull;
 @Accessors(chain = true)
 @NoArgsConstructor
 @AllArgsConstructor
-public class RegisterDTO {
-
+public class AddUserDTO {
     @NotNull
     private String username;
     @Length(min = 6, max = 16, message = "密码长度必须在6-16位之间")
     private String password;
-    @Email(message = "邮箱格式错误")
-    private String email;
-
+    @NotNull
+    private String account;
 }
