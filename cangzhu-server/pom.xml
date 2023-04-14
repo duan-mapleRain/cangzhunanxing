@@ -6,10 +6,11 @@
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>2.6.11</version>
+        <relativePath/>
     </parent>
 
     <groupId>com.maplerain</groupId>
-    <artifactId>cangzhu-web</artifactId>
+    <artifactId>cangzhu-server</artifactId>
     <version>1.0.0</version>
     <name>cangzhu-server</name>
     <description>苍术后端</description>
@@ -26,9 +27,7 @@
     <packaging>pom</packaging>
 
     <properties>
-        <maven.compiler.source>17</maven.compiler.source>
-        <maven.compiler.target>17</maven.compiler.target>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <java.version>19</java.version>
     </properties>
 
 
