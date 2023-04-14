@@ -32,3 +32,5 @@ build/
 ### VS Code ###
 .vscode/
 
+/base-file/redis/data/appendonlydir/
+/base-file/redis/data/dump.rdb
