@@ -1,0 +1,122 @@
+<template>
+    <router-view></router-view>
+    <div class="login">
+        <h1>南星</h1>
+        <form @submit.prevent="login">
+            <div class="form-group">
+                <label for="username">用户名</label>
+                <input type="text" id="username" v-model="username" required>
+            </div>
+            <div class="form-group">
+                <label for="password">密码</label>
+                <input type="password" id="password" v-model="password" required>
+            </div>
+            <button type="submit">登录</button>
+        </form>
+    </div>
+</template>
+
+
+<script>
+import router from "@/router";
+export default {
+    name: 'Login',
+    loginData() {
+        return {
+            username: "",
+            password: "",
+        };
+    },
+    responseData() {
+        return {
+            responseCode: "",
+            message: "",
+            data: {
+                token: ""
+            }
+        }
+    },
+    methods: {
+        login() {
+            const loginInfo = {
+                username: this.username,
+                password: this.password
+            };
+            fetch("http://localhost:8081/login", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(loginInfo)
+            })
+                .then(response => response.json())
+                .then(responseData => {
+                        if (responseData.responseCode === 200) {
+                            alert(responseData.message);
+                            sessionStorage.setItem('token', responseData.data.token)
+                            // 登录成功，跳转到首页
+                            router.push('/')
+                        } else {
+                            alert(responseData.message);
+                        }
+                    }
+                )
+                .catch(error => {
+                    alert(error);
+                });
+        }
+    }
+};
+</script>
+
+<style scoped>
+.login {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+label {
+    font-weight: bold;
+}
+
+input {
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 0.25rem;
+    font-size: 1rem;
+    text-align: center;
+}
+
+button {
+    padding: 0.5rem 1rem;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 0.25rem;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+.error {
+    color: red;
+    margin-top: 1rem;
+}
+</style>

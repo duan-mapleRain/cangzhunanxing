@@ -1,17 +1,39 @@
 <!DOCTYPE html>
-<html lang="">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <link rel="icon" href="<%= BASE_URL %>favicon.ico">
-    <title><%= htmlWebpackPlugin.options.title %></title>
-  </head>
-  <body>
-    <noscript>
-      <strong>We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
-    </noscript>
-    <div id="app"></div>
-    <!-- built files will be auto injected -->
-  </body>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <style>
+        #app {
+            #loader .load_title {
+                color: #000;
+                font-size: 19px;
+                width: 100%;
+                text-align: center;
+                z-index: 9999999999999;
+                position: absolute;
+                top: 60%;
+                opacity: 1;
+                line-height: 30px;
+            }
+
+            #loader.load_title span {
+                font-weight: normal;
+                font-style: italic;
+                font-size: 13px;
+                color: #000;
+                opacity: 0.5;
+            }
+        }
+    </style>
+</head>
+
+<body>
+<div id="app">
+    <div id="loader">
+        <div class="load_title">正在加载系统资源，请耐心等待</div>
+    </div>
+</div>
+</body>
+
 </html>
