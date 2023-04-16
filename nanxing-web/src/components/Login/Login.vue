@@ -4,8 +4,8 @@
         <h1>南星</h1>
         <form @submit.prevent="login">
             <div class="form-group">
-                <label for="username">用户名</label>
-                <input type="text" id="username" v-model="username" required>
+                <label for="account">用户名</label>
+                <input type="text" id="account" v-model="account" required>
             </div>
             <div class="form-group">
                 <label for="password">密码</label>
@@ -20,10 +20,11 @@
 <script>
 import router from "@/router";
 export default {
+    // eslint-disable-next-line vue/multi-word-component-names
     name: 'Login',
     loginData() {
         return {
-            username: "",
+            account: "",
             password: "",
         };
     },
@@ -39,10 +40,10 @@ export default {
     methods: {
         login() {
             const loginInfo = {
-                username: this.username,
+                account: this.account,
                 password: this.password
             };
-            fetch("http://localhost:8081/login", {
+            fetch("http://localhost:5802/login", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"

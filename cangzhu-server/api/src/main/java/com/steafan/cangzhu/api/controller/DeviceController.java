@@ -1,15 +1,15 @@
 package com.steafan.cangzhu.api.controller;
 
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.steafan.cangzhu.api.controller.request.DeleteDTO;
 import com.steafan.cangzhu.api.controller.request.QueryByIdDTO;
 import com.steafan.cangzhu.api.controller.request.QueryPageDTO;
-import com.steafan.cangzhu.api.service.DeviceService;
 import com.steafan.cangzhu.api.controller.request.device.AddDeviceDTO;
 import com.steafan.cangzhu.api.controller.request.device.UpdateDeviceDTO;
+import com.steafan.cangzhu.api.controller.response.BaseListResponse;
 import com.steafan.cangzhu.api.controller.response.BaseResponse;
 import com.steafan.cangzhu.api.controller.response.device.DeviceResponse;
 import com.steafan.cangzhu.api.repository.entity.DeviceDAO;
+import com.steafan.cangzhu.api.service.DeviceService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -51,7 +51,7 @@ public class DeviceController {
     }
 
     @PostMapping("/query/list")
-    public BaseResponse<Page<Map<String, Object>>> queryList(@RequestBody QueryPageDTO<DeviceDAO> queryPageDTO) {
+    public BaseResponse<BaseListResponse<Map<String, Object>>> queryList(@RequestBody QueryPageDTO<DeviceDAO> queryPageDTO) {
         return BaseResponse.success("", deviceService.queryList(queryPageDTO));
     }
 
