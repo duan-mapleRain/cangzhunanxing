@@ -16,31 +16,33 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 
+/**
+ * @author Maple
+ */
 @RestController
 @RequestMapping("/user")
 @RequiredArgsConstructor
 @Validated
-
 public class UserController {
 
     private final UserService userService;
 
-    @PostMapping("/add/user")
+    @PostMapping("/add")
     public BaseResponse<Integer> add(@Valid @RequestBody AddUserDTO registerDTO) {
-        return BaseResponse.success("注册成功", userService.add(registerDTO));
+        return BaseResponse.success("添加成功", userService.add(registerDTO));
     }
 
     @PostMapping("/update/passwd")
-    public BaseResponse<Void> update_passwd(@AuthenticationPrincipal TokenDTO tokenDTO,
-                                            @Valid @RequestBody UpdatePasswdDTO updatePasswdDTO) {
-        userService.update_passwd(tokenDTO,updatePasswdDTO);
+    public BaseResponse<Void> updatePasswd(@AuthenticationPrincipal TokenDTO tokenDTO,
+                                           @Valid @RequestBody UpdatePasswdDTO updatePasswdDTO) {
+        userService.updatePasswd(tokenDTO,updatePasswdDTO);
         return BaseResponse.success();
     }
 
     @PostMapping("/update/info")
-    public BaseResponse<Void> update_user_info(@RequestBody @AuthenticationPrincipal TokenDTO tokenDTO,
-                                               @Valid @RequestBody UpdateInfoDTO updateInfoDTO) {
-        userService.update_user_info(tokenDTO, updateInfoDTO);
+    public BaseResponse<Void> updateUserInfo(@RequestBody @AuthenticationPrincipal TokenDTO tokenDTO,
+                                             @Valid @RequestBody UpdateInfoDTO updateInfoDTO) {
+        userService.updateUserInfo(tokenDTO, updateInfoDTO);
         return BaseResponse.success();
     }
 

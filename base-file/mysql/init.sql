@@ -13,7 +13,7 @@ create table if not exists p_user
 );
 
 insert into p_user (username, account, password, status)
-VALUES ('root', '超级管理员', '$2a$10$LORDv0Kr2mF0fb6Vc7J1VeZdGdAIK2mQlG/Bu67PurGij8cOg04cq', 2);
+VALUES ('root', '超级管理员', '$2a$10$WgngmRj.zP4Y0hOfY/9Qmu60c2Nopg0AuRJp6Klp3i4oNBxkS7Flm', 2);
 
 create table if not exists p_device_type
 (

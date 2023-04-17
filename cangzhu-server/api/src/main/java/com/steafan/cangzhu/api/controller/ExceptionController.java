@@ -110,7 +110,7 @@ public class ExceptionController {
      */
     @ExceptionHandler(AuthenticationException.class)
     public BaseResponse<String> authExceptionHandler(AuthenticationException e) {
-        return BaseResponse.fail(CZHttpStatus.SEVER_ERROR.code, CZHttpStatus.SEVER_ERROR.message);
+        return BaseResponse.fail(CZHttpStatus.USER_LOGIN_FAIL.code, CZHttpStatus.USER_LOGIN_FAIL.message);
     }
 
     /**

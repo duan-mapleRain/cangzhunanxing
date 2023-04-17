@@ -4,9 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
-import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 /**
  * @author AnselYuki
@@ -18,8 +18,10 @@ import javax.validation.constraints.NotNull;
 public class AddUserDTO {
     @NotNull
     private String username;
-    @Length(min = 6, max = 16, message = "密码长度必须在6-16位之间")
+    @Size(min = 32, max = 32, message = "加密后需要为32位")
     private String password;
     @NotNull
     private String account;
+    @NotNull
+    private int status;
 }

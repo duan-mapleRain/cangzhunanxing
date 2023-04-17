@@ -4,10 +4,13 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.steafan.cangzhu.api.controller.request.user.AddUserDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+
+import static org.springframework.beans.BeanUtils.copyProperties;
 
 @Data
 @Accessors(chain = true)
@@ -29,4 +32,10 @@ public class UserDAO {
      * 2 管理员
      */
     private Integer status;
+
+    public static UserDAO DTO2DAO(AddUserDTO addUserDTO){
+        UserDAO userDAO = new UserDAO();
+        copyProperties(addUserDTO, userDAO);
+        return userDAO;
+    }
 }

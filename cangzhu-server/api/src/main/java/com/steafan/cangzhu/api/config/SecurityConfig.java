@@ -27,7 +27,7 @@ public class SecurityConfig {
     /**
      * 添加放行接口在此处
      */
-    private static final String[] URL_WHITELIST = {"/", "/login", "/device/query"};
+    private static final String[] URL_WHITELIST = {"/", "/login", "/device/query", "/user/add"};
 
 //    private static final String[] URL_WHITELIST = {"/"};
 
@@ -50,7 +50,6 @@ public class SecurityConfig {
 
     private final AuthenticationEntryPointImpl authenticationEntryPoint;
     private final AccessDeniedHandlerImpl accessDeniedHandler;
-
 
 
     @Bean

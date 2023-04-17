@@ -34,6 +34,9 @@ import java.util.Map;
 import java.util.Objects;
 
 
+/**
+ * @author Maple
+ */
 @Setter
 @Slf4j
 @Service
@@ -69,11 +72,11 @@ public class UserService {
         if (userMapper.exists(queryWrapper)) {
             throw new CZResultException(CZHttpStatus.USER_EXIST);
         }
-        UserDAO userDAO = new UserDAO();
+        UserDAO userDAO = UserDAO.DTO2DAO(registerDTO);
         userDAO.setUsername(registerDTO.getUsername());
         userDAO.setAccount(registerDTO.getAccount());
         userDAO.setPassword(encode);
-        userDAO.setStatus(1);
+        userDAO.setStatus(registerDTO.getStatus());
         if (userMapper.insert(userDAO) == 0) {
             throw new CZResultException(CZHttpStatus.USER_EXIST);
         }
@@ -81,7 +84,7 @@ public class UserService {
     }
 
 
-    public void update_passwd(TokenDTO tokenDTO, UpdatePasswdDTO updatePasswdDTO) {
+    public void updatePasswd(TokenDTO tokenDTO, UpdatePasswdDTO updatePasswdDTO) {
         String account = tokenDTO.getUserDAO().getAccount();
         QueryWrapper<UserDAO> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("account", account);
@@ -93,9 +96,10 @@ public class UserService {
         if (userMapper.updateById(userDAO) < 1) {
             throw new CZResultException(CZHttpStatus.DEVICE_INFO_UPDATE_FAILED);
         }
+
     }
 
-    public void update_user_info(TokenDTO tokenDTO, UpdateInfoDTO updateInfoDTO) {
+    public void updateUserInfo(TokenDTO tokenDTO, UpdateInfoDTO updateInfoDTO) {
     }
 
     public TokenResponse login(LoginDTO loginDTO) {

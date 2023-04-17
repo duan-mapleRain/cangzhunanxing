@@ -4,9 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
-import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.Email;
+import javax.validation.constraints.Size;
 
 /**
  * @author AnselYuki
@@ -17,7 +17,7 @@ import javax.validation.constraints.Email;
 @AllArgsConstructor
 public class LoginDTO {
     private String account;
-    @Length(min = 6, max = 16, message = "密码长度必须在6-16位之间")
+    @Size(min = 32, max = 32, message = "32位")
     private String password;
 
 }

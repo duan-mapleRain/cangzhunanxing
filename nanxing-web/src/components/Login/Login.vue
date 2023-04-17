@@ -4,12 +4,14 @@
         <h1>南星</h1>
         <form @submit.prevent="login">
             <div class="form-group">
-                <label for="username">用户名</label>
-                <input type="text" id="username" v-model="username" required>
+                <label for="account">用户名</label>
+                <n-space vertical>
+                    <n-input type="text" id="account" v-model="account" required/>
+                </n-space>
             </div>
             <div class="form-group">
                 <label for="password">密码</label>
-                <input type="password" id="password" v-model="password" required>
+                <n-input type="password" id="password" v-model="password" required/>
             </div>
             <button type="submit">登录</button>
         </form>
@@ -19,30 +21,18 @@
 
 <script>
 import router from "@/router";
+import {md5} from "@/utils/md5";
+
+
 export default {
     name: 'Login',
-    loginData() {
-        return {
-            username: "",
-            password: "",
-        };
-    },
-    responseData() {
-        return {
-            responseCode: "",
-            message: "",
-            data: {
-                token: ""
-            }
-        }
-    },
     methods: {
         login() {
             const loginInfo = {
-                username: this.username,
-                password: this.password
+                account: this.account,
+                password: md5(this.password + "cangzhu")
             };
-            fetch("http://localhost:8081/login", {
+            fetch("http://localhost:8080/login", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -53,16 +43,16 @@ export default {
                 .then(responseData => {
                         if (responseData.responseCode === 200) {
                             alert(responseData.message);
-                            sessionStorage.setItem('token', responseData.data.token)
+                            localStorage.setItem('Authorization', "Bearer " + responseData.data.token)
                             // 登录成功，跳转到首页
                             router.push('/')
                         } else {
-                            alert(responseData.message);
+                            alert(responseData.responseCode + responseData.message);
                         }
                     }
                 )
                 .catch(error => {
-                    alert(error);
+                    alert("服务器错误");
                 });
         }
     }
