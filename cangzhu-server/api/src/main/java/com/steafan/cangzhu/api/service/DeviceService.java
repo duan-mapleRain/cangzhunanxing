@@ -2,6 +2,7 @@ package com.steafan.cangzhu.api.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.steafan.cangzhu.api.controller.response.BaseListResponse;
 import com.steafan.cangzhu.api.mapper.DeviceMapper;
 import com.steafan.cangzhu.api.controller.request.DeleteDTO;
 import com.steafan.cangzhu.api.controller.request.QueryByIdDTO;
@@ -67,10 +68,9 @@ public class DeviceService {
         return DeviceDAO.DAO2RES(deviceDAO);
     }
 
-    public Page<Map<String, Object>> queryList(QueryPageDTO<DeviceDAO> queryPageDTO) {
-        Page<Map<String, Object>> queryDevicePageResult = deviceMapper.selectMapsPage(new Page<>(queryPageDTO.getCurrent(), queryPageDTO.getSize()),
-                queryPageDTO.getQueryWrapper());
+    public BaseListResponse<Map<String, Object>> queryList(QueryPageDTO<DeviceDAO> queryPageDTO) {
+        Page<Map<String, Object>> queryDevicePageResult = deviceMapper.selectMapsPage(new Page<>(queryPageDTO.getCurrent(), queryPageDTO.getSize()), queryPageDTO.getQueryWrapper());
 
-        return queryDevicePageResult;
+        return new BaseListResponse<>(queryDevicePageResult.getTotal(), queryDevicePageResult.getSize(), queryDevicePageResult.getCurrent(), queryDevicePageResult.getRecords());
     }
 }

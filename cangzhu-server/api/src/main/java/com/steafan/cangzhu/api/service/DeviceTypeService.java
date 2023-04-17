@@ -52,4 +52,5 @@ public class DeviceTypeService {
         DeviceTypeDAO deviceTypeDAO = deviceTypeMapper.selectById(queryByIdDTO.getId());
         return DeviceTypeDAO.DAO2RES(deviceTypeDAO);
     }
+
 }
