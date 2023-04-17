@@ -5,13 +5,11 @@
         <form @submit.prevent="login">
             <div class="form-group">
                 <label for="account">用户名</label>
-                <n-space vertical>
-                    <n-input type="text" id="account" v-model="account" required/>
-                </n-space>
+                <input type="text" id="account" v-model="account">
             </div>
             <div class="form-group">
                 <label for="password">密码</label>
-                <n-input type="password" id="password" v-model="password" required/>
+                <input type="password" id="password" v-model="password">
             </div>
             <button type="submit">登录</button>
         </form>
@@ -23,8 +21,8 @@
 import router from "@/router";
 import {md5} from "@/utils/md5";
 
-
 export default {
+    // eslint-disable-next-line vue/multi-word-component-names
     name: 'Login',
     methods: {
         login() {
@@ -51,6 +49,7 @@ export default {
                         }
                     }
                 )
+                // eslint-disable-next-line no-unused-vars
                 .catch(error => {
                     alert("服务器错误");
                 });

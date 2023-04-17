@@ -4,11 +4,13 @@ import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-/**
- * @author AnselYuki
- */
+
 @SpringBootConfiguration
 public class CorsConfig implements WebMvcConfigurer {
+
+    /**
+     * 跨域配置
+     */
 
 
 

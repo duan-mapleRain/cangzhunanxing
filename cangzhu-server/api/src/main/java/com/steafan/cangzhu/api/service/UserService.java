@@ -5,15 +5,16 @@ import cn.hutool.core.date.DateTime;
 import cn.hutool.jwt.JWTPayload;
 import cn.hutool.jwt.JWTUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.steafan.cangzhu.api.mapper.UserMapper;
 import com.steafan.cangzhu.api.controller.request.TokenDTO;
 import com.steafan.cangzhu.api.controller.request.user.AddUserDTO;
 import com.steafan.cangzhu.api.controller.request.user.LoginDTO;
 import com.steafan.cangzhu.api.controller.request.user.UpdateInfoDTO;
 import com.steafan.cangzhu.api.controller.request.user.UpdatePasswdDTO;
 import com.steafan.cangzhu.api.controller.response.CZResultException;
+import com.steafan.cangzhu.api.controller.response.CZSystemInfo;
 import com.steafan.cangzhu.api.controller.response.TokenResponse;
 import com.steafan.cangzhu.api.enums.CZHttpStatus;
+import com.steafan.cangzhu.api.mapper.UserMapper;
 import com.steafan.cangzhu.api.repository.RedisCache;
 import com.steafan.cangzhu.api.repository.entity.UserDAO;
 import lombok.RequiredArgsConstructor;
@@ -60,6 +61,12 @@ public class UserService {
     @Value("${cz-copilot.jwt.expire}")
     private int expire;
 
+    @Value("${spring.application.name}")
+    private String appName;
+
+    public CZSystemInfo info() {
+        return new CZSystemInfo(appName,"success");
+    }
 
     //
     public int add(AddUserDTO registerDTO) {
@@ -155,5 +162,6 @@ public class UserService {
     public void update(TokenDTO tokenDTO) {
         //todo 判断redis中是否存在，如果存在则更新过期时间
     }
+
 
 }

@@ -1,7 +1,7 @@
 
 
 server:
-  port: 5802
+  port: 8080
 
 spring:
   datasource:
@@ -16,6 +16,8 @@ spring:
   mvc:
     servlet:
       load-on-startup: 1
+  application:
+    name: cangzhu-server
 
 cz-copilot:
   jwt:

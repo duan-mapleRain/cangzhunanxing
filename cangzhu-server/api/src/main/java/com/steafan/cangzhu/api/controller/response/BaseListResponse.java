@@ -13,7 +13,9 @@ public class BaseListResponse<T> {
     //每页显示条数，默认 10
     private long size;
     //当前页
-    private long current = 1;
-
+    private long current;
+    //总页数
+    private long pages;
+    //结果集
     private List<T> list;
 }

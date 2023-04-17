@@ -10,43 +10,64 @@
 
 <script>
 import router from "@/router";
-export default {
-    name: 'Main',
-    computed: {
-        hasValidToken() {
-            const token = localStorage.getItem('token');
-            if (token) {
-                const expiration = localStorage.getItem('expiration');
-                if (expiration && new Date(expiration) > new Date()) {
-                    // token存在且未过期
-                    return true;
-                } else {
-                    // token过期或没有设置过期时间
-                    localStorage.removeItem('token');
-                    localStorage.removeItem('expiration');
-                }
-            }
-            // token不存在或已过期
-            return false;
-        }
-    },
-    methods: {
-        click() {
-            if (this.hasValidToken) {
-                // token存在且未过期，刷新数据
-                // TODO: 刷新数据的逻辑
-            } else {
-                // token不存在或已过期，导航到登录页面
-
-            }
-        }
-    }
-}
 
 function noToken() {
     alert("尚未登录，请登录");
     router.push('/login')
 }
+
+function exit() {
+    localStorage.removeItem("token");
+    localStorage.removeItem("expiration");
+    router.push('/login')
+}
+
+export default {
+    // eslint-disable-next-line vue/multi-word-component-names
+    name: 'Main',
+    computed: {
+        hasValidToken() {
+            const token = localStorage.getItem('Authorization');
+            if (token) {
+                //与服务器通信验证token是否过期
+                // eslint-disable-next-line vue/no-async-in-computed-properties
+                 fetch("http://localhost:8080/verify", {
+                     method: "POST",
+                     headers: {
+                         "Authorization": token
+                     }
+                 })
+                     .then(response => response.json())
+                     .then(responseData => {
+                             if (responseData.responseCode === 200) {
+                                 // token有效
+                                 return true;
+                             } else {
+                                 // token过期
+                                 return false;
+                             }
+                         }
+                     )
+                     // eslint-disable-next-line no-unused-vars
+                     .catch(error => {
+                         // 服务器错误
+                         return false;
+                     });
+                return true;
+            }else {
+                // 无token
+                noToken();
+            }
+        }
+    },
+    methods: {
+        click() {
+            exit();
+        }
+    }
+};
+
+
 </script>
 
 <style scoped>

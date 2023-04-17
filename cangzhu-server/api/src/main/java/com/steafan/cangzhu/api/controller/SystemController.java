@@ -1,10 +1,11 @@
 package com.steafan.cangzhu.api.controller;
 
 
-import com.steafan.cangzhu.api.service.UserService;
 import com.steafan.cangzhu.api.controller.request.user.LoginDTO;
 import com.steafan.cangzhu.api.controller.response.BaseResponse;
+import com.steafan.cangzhu.api.controller.response.CZSystemInfo;
 import com.steafan.cangzhu.api.controller.response.TokenResponse;
+import com.steafan.cangzhu.api.service.UserService;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -24,8 +25,8 @@ public class SystemController {
 
     @GetMapping("/")
     @ApiResponse(description = "系统启动信息")
-    public BaseResponse<String> test() {
-        return BaseResponse.success("CZ Server is Running", null);
+    public BaseResponse<CZSystemInfo> test() {
+        return BaseResponse.success("CZ Server is Running", userService.info());
     }
 
     @PostMapping("/login")

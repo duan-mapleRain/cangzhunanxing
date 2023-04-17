@@ -1,38 +1,60 @@
 <template>
-    <router-view></router-view>
-    <footer id="bottom">
-        <h1 id="run_status">未连接服务器</h1>
-    </footer>
+    <div id="app">
+        <router-view></router-view>
+        <head-and-foot :server-name="serverName" :server-status="serverStatus" />
+    </div>
 </template>
 
 <script>
+import HeadAndFoot from '@/components/tools/headAndFoot.vue'
 
-//在页面下方固定一个footer，每秒刷新服务器运行状态，如果服务器运行正常则显示“系统运行正常”，否则显示服务器返回的错误信息
 export default {
     name: 'App',
-    beforeMount() {
+    components: {
+        HeadAndFoot
+    },
+    data() {
+        return {
+            serverName: '',
+            serverStatus: ''
+        }
+    },
+    mounted() {
         setInterval(() => {
             this.checkServer()
-        }, 1000 * 10)
+        }, 10000)
     },
     methods: {
         checkServer() {
-            fetch("http://localhost:8080/", {
-                method: "GET",
-            }).then(response => response.json())
+            fetch('http://localhost:8080/', {
+                method: 'GET'
+            })
+                .then(response => response.json())
                 .then(responseData => {
                     if (responseData.responseCode === 200) {
-                        document.getElementById("run_status").innerHTML = "系统运行正常";
+                        this.serverName = responseData.data.name
+                        this.serverStatus = responseData.data.status
                     } else {
-                        document.getElementById("run_status").innerHTML = responseData.message;
+                        this.serverName = "服务器错误"
+                        this.serverStatus = "responseData.data.status"
                     }
                 })
+                .catch(error => {
+                    this.serverName = "服务器错误"
+                    this.serverStatus = error
+                })
         }
-    },
-    components: {}
+    }
 }
 </script>
 
 <style>
-
+#app {
+    font-family: 'Avenir', Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-align: center;
+    color: #2c3e50;
+    margin-top: 60px;
+}
 </style>
